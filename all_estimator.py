@@ -1,5 +1,6 @@
 from lwyy.hardness_of_lpn import *
 from hybrid.hybrid_quick import *
+from esser.regular_ISD import *
 
 #####################      Bit security of LPN and dual LPN     ###########################
 # We propose a non-asymptotic cost of the information set decoding algorithm, Pooled Gauss attack, and statistical decoding attack
@@ -49,7 +50,12 @@ def analysisfor2regular(N, k, t):
     # hybrid
     T3 = hybrid_2_quick(N,k,t)
 
-    return min(T1, T2, T3)
+    # esser
+    T4 = permutation_based_concrete_cost(N,k,t)
+    T5 = enumeration_based_concrete_cost(N,k,t)
+    T6 = representation_based_concrete_cost_depth_2(N,k,t)
+
+    return min(T1, T2, T3, T4, T5, T6)
 
 
 def analysisfordual2(n, N, t):
@@ -70,8 +76,6 @@ def analysisforq(N, k, t, q):
     T3 = Gauss(N, k, t)
     T4 = SD2forq(N, k, t, q)
 
-
-
     return min(T1, T2, T3, T4)
 
 
@@ -83,7 +87,10 @@ def analysisforqregular(N, k, t, q):
     # hybrid
     T3 = hybrid_bigq_quick(N,k,t)
 
-    return min(T1, T2, T3)
+    # esser
+    T4 = permutation_based_concrete_cost_bigq(N, k, t)
+
+    return min(T1, T2, T3, T4)
 
 
 def analysisfordualq(n, N, t, q):
