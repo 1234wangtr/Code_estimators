@@ -1,6 +1,8 @@
 from lwyy.hardness_of_lpn import *
 from hybrid.hybrid_quick import *
 from esser.regular_ISD import *
+from agb2.agb2 import *
+from rank.rank_sd_estimator import *
 
 #####################      Bit security of LPN and dual LPN     ###########################
 # We propose a non-asymptotic cost of the information set decoding algorithm, Pooled Gauss attack, and statistical decoding attack
@@ -34,7 +36,6 @@ def analysisfor2(N, k, t):
     T5 = BJMM_ISD(N, k, t)
     print(f"BJMM={T5}")
 
-    # Hybrid
 
     return min(T1, T2, T3, T4, T5)
 
@@ -55,7 +56,13 @@ def analysisfor2regular(N, k, t):
     T5 = enumeration_based_concrete_cost(N,k,t)
     T6 = representation_based_concrete_cost_depth_2(N,k,t)
 
-    return min(T1, T2, T3, T4, T5, T6)
+    # agb2
+    T7 = OurAGB2for2(N,k,t)
+
+    # dbg
+    print(f"AGB={T1} ISD={T2} HYB={T3} PER={T4} ENU={T5} REP={T6} AGB2={T7}")
+
+    return min(T1, T2, T3, T4, T5, T6, T7)
 
 
 def analysisfordual2(n, N, t):
@@ -90,7 +97,13 @@ def analysisforqregular(N, k, t, q):
     # esser
     T4 = permutation_based_concrete_cost_bigq(N, k, t)
 
-    return min(T1, T2, T3, T4)
+    # agb
+    T5 = OurAGB2forq(N,k,t)
+
+    # dbg
+    print(f"AGB={T1} ISD={T2} HYB={T3} RISD={T4} AGB2={T5}")
+
+    return min(T1, T2, T3, T4, T5)
 
 
 def analysisfordualq(n, N, t, q):
@@ -124,3 +137,7 @@ def analysisfordual2lambdaregular(n, N, t, lam):
     k = N - n
 
     return analysisfordual2lambda(n, N, t, lam)
+
+def analysisforrank(n,k,r,q,m):
+    T1 = optimized_GRS(n,k,r,q,m)
+    return T1

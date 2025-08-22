@@ -80,7 +80,7 @@ def representation_based_concrete_cost_depth_2(n, k, w):
     if best_params["eps_x"] == eps_x_max:
         print("!!!!ERROR: eps_x_max is too low for repr-based")
 
-    return min_cost
+    return min_cost[0]
 
 def permutation_based_concrete_cost_bigq(n, k, w):
     """
@@ -107,7 +107,7 @@ def permutation_based_concrete_cost_bigq(n, k, w):
 
     cost = log2(T_iter) - w*log2(1-k_prime/n)
 
-    return [cost, log2(n - k) + log2(n)]
+    return cost
 
 def permutation_based_concrete_cost(n,k,w):
     """
@@ -132,7 +132,7 @@ def permutation_based_concrete_cost(n,k,w):
     #overall cost
     cost = log2(T_iter)-log2(p_iter);
 
-    return [cost, log2(n-k)+log2(n)];
+    return cost
 
 def enumeration_based_concrete_cost(n, k, w):
     """
@@ -205,7 +205,7 @@ def enumeration_based_concrete_cost(n, k, w):
     if best_params["p"] == p_max:
         print("!!!!ERROR: p_max is too low for enum-based")
 
-    return best_params, min_cost
+    return min_cost[0]
 
 
 if __name__ == '__main__':

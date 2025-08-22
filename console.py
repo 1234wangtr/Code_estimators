@@ -109,6 +109,16 @@ def main():
         else:
             help()
 
+    elif 'n' in sys.argv[1] and 'k' in sys.argv[2] and 't' in sys.argv[3] and 'q' in sys.argv[4] and 'm' in sys.argv[5]:
+        n = int(re.findall(r"\d+", sys.argv[1]).pop())
+        k = int(re.findall(r"\d+", sys.argv[2]).pop())
+        t = int(re.findall(r"\d+", sys.argv[3]).pop())
+        q = int(re.findall(r"\d+", sys.argv[4]).pop())
+        m = int(re.findall(r"\d+", sys.argv[5]).pop())
+        res = analysisforrank(n,k,t,q,m)
+        print("bit security of rank SD (n=" + str(n) + ", k=" + str(k) + ", t=" + str(t) + ", q=" + str(q) + ", m=" + str(m) +  "):")
+        print(res)
+        print()
 
     else:
         help()
