@@ -522,7 +522,7 @@ def hybrid_2_quick(n, k, h,refresh=True):
             best = val
             best_u = u
 
-    print(f"T={best} u={best_u}")
+    # print(f"T={best} u={best_u}")
     return best
 
 def sub_2_quick_u(n,k,h,u):
