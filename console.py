@@ -3,7 +3,28 @@ import re
 
 from all_estimator import *
 
-
+def help():
+    print(
+        "============================================input error ================================================")
+    print("input format of exact LPN: C:\\script.py N=1024 k=652 t=57 exact")
+    print("============================================================================================")
+    print(
+        "or C:\\script.py N=1024 k=652 t=57 lambda=13 exact  #(bit security of exact LPN with ring size 2^lambda)")
+    print("or C:\\script.py N=1024 k=652 t=57 q=13 exact #(bit security of exact LPN with field size q")
+    print("or C:\\script.py n=1024 N=4096 t=88 exact #(bit security of dual exact LPN)")
+    print(
+        "or C:\\script.py n=1024 N=4096 t=88 lambda=13 exact #(bit security of dual exact LPN with ring size 2^lambda)")
+    print("or C:\\script.py n=1024 N=4096 t=88 q=13 exact #(bit security of dual exact LPN with field size q")
+    print(" ============================================================================================")
+    print("input format of regular LPN: C:\\script.py N=1024 k=652 t=57 regular")
+    print(
+        "or C:\\script.py N=1024 k=652 t=57 lambda=13 regular #(bit security of regular LPN with ring size 2^lambda)")
+    print("or C:\\script.py N=1024 k=652 t=57 q=13 regular #(bit security of regular LPN with field size q")
+    print("or C:\\script.py n=1024 N=4096 t=88 regular #(bit security of dual regular LPN)")
+    print(
+        "or C:\\script.py n=1024 N=4096 t=88 lambda=13 regular #(bit security of dual regular LPN with ring size 2^lambda)")
+    print("or C:\\script.py n=1024 N=4096 t=88 q=13 regular #(bit security of dual regular LPN with field size q")
+    print()
 
 #####################      main() function   ###########################
 

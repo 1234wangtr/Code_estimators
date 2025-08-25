@@ -373,7 +373,6 @@ def subOurAGB2forq(n, k, h, f, mu, sizeM1, sizeM2, finalcost):
     subgcost = 9999999999
     stepg = repeat * 3
 
-
     if sizeM2[f][mu][d - 2] > 0:
         M2 = decimal.Decimal(sizeM2[f][mu][d - 2])
     else:
@@ -411,7 +410,7 @@ def subOurAGB2forq(n, k, h, f, mu, sizeM1, sizeM2, finalcost):
 
         fprime = 0
         muprime = 0
-        for ff in range(f, 1, -1):
+        for ff in range(f, 0, -1):
 
 
             if step < 0:
@@ -441,17 +440,14 @@ def subOurAGB2forq(n, k, h, f, mu, sizeM1, sizeM2, finalcost):
 
 
                 if sizeM1[fprime][muprime][d - 2] > 0:
-                    M1 = decimal.Decimal(3 * (k + 1 - fprime * muprime)) * decimal.Decimal(
-                        sizeM1[fprime][muprime][d - 2]) ** Decimal(2)
+                    M1 = decimal.Decimal(5.64) * decimal.Decimal(sizeM1[fprime][muprime][d - 2]) ** Decimal(2.8)
                 else:
-                    M1 = decimal.Decimal(3 * (k + 1 - fprime * muprime)) * decimal.Decimal(
-                        M1forq(n, k, h, fprime, muprime, d, sizeM1)) ** Decimal(2)
+                    M1 = decimal.Decimal(5.64) * decimal.Decimal(M1forq(n, k, h, fprime, muprime, d, sizeM1)) ** Decimal(2.8)
 
                 if sizeM2[fprime][muprime][d - 2] > 0:
                     M2 = decimal.Decimal(5.64) * decimal.Decimal(sizeM2[fprime][muprime][d - 2]) ** Decimal(2.8)
                 else:
-                    M2 = decimal.Decimal(5.64) * decimal.Decimal(
-                        M2forq(n, k, h, fprime, muprime, d, sizeM2)) ** Decimal(2.8)
+                    M2 = decimal.Decimal(5.64) * decimal.Decimal(M2forq(n, k, h, fprime, muprime, d, sizeM2)) ** Decimal(2.8)
 
 
                 mm = max(decimal.Decimal(sizeM1[fprime][muprime][d - 2]) - decimal.Decimal(sizeM2[fprime][muprime][d - 2]),1)
@@ -501,7 +497,6 @@ def subOurAGB2forq(n, k, h, f, mu, sizeM1, sizeM2, finalcost):
 ####################### The cost of AGB 2.0 r2 over F_q
 # The cost of AGB over F_q
 def OurAGB2forq(n, k, h):
-
     sizeM1 = zeors_array = np.zeros((h + 1, math.floor(n / h) + 1, 3))
     sizeM2 = zeors_array = np.zeros((h + 1, math.floor(n / h) + 1, 3))
     # print(size)
@@ -880,11 +875,9 @@ def subOurAGB2for2(n, k, h, f, mu, sizeM1, sizeM2, finalcost):
                     continue
 
                 if sizeM1[fprime][muprime][d - 2] > 0:
-                    M1 = decimal.Decimal(3 * (k + 1 - fprime * muprime)) * decimal.Decimal(
-                        sizeM1[fprime][muprime][d - 2]) ** Decimal(2)
+                    M1 = decimal.Decimal(5.64) * decimal.Decimal(sizeM1[fprime][muprime][d - 2]) ** Decimal(2.8)
                 else:
-                    M1 = decimal.Decimal(3 * (k + 1 - fprime * muprime)) * decimal.Decimal(
-                        M1for2(n, k, h, fprime, muprime, d, sizeM1)) ** Decimal(2)
+                    M1 = decimal.Decimal(5.64) * decimal.Decimal(M1for2(n, k, h, fprime, muprime, d, sizeM1)) ** Decimal(2.8)
 
                 if sizeM2[fprime][muprime][d - 2] > 0:
                     M2 = decimal.Decimal(5.64) * decimal.Decimal(sizeM2[fprime][muprime][d - 2]) ** Decimal(2.8)
@@ -1167,6 +1160,8 @@ def OurAGB2for2(n, k, h):
 
     return round(mincost, 2)
 
+
+
 ##################### Table ###################################
 def table():
     print("==================AGB2.0==================128==========larger=====================" + "\n")
@@ -1177,7 +1172,7 @@ def table():
     print(OurAGB2forq(1024 * 64, 7391, 667))
     print(OurAGB2forq(1024 * 256, 15336, 1312))
     print(OurAGB2forq(1024 * 1024, 32771, 2467))
-    print(OurAGB2forq(1024 * 1024 * 4, 67440, 4788))
+    print(OurAGB2forq(1024 * 1024 * 4, 64770, 4788))
 
     print("==================AGB2.0==================128==========small=====================" + "\n")
 
@@ -1189,17 +1184,9 @@ def table():
     print(OurAGB2forq(1024 * 64, 7391, 389))
     print(OurAGB2forq(1024 * 256, 15336, 760))
     print(OurAGB2forq(1024 * 1024, 32771, 1419))
-    print(OurAGB2forq(1024 * 1024 * 4, 67440, 2735))
+    print(OurAGB2forq(1024 * 1024 * 4, 64770, 2735))
 
-    print("==================AGB2.0==================128==========larger=====================" + "\n")
 
-    print(OurAGB2forq(1024, 652, 106))
-    print(OurAGB2forq(1024 * 4, 1589, 172))
-    print(OurAGB2forq(1024 * 16, 3482, 338))
-    print(OurAGB2forq(1024 * 64, 7391, 667))
-    print(OurAGB2forq(1024 * 256, 15336, 1312))
-    print(OurAGB2forq(1024 * 1024, 32771, 2467))
-    print(OurAGB2forq(1024 * 1024 * 4, 67440, 4788))
 
     print("==================AGB2.0==================2==========smaller=====================" + "\n")
 
@@ -1209,7 +1196,7 @@ def table():
     print(OurAGB2for2(1024 * 64, 7391, 389))
     print(OurAGB2for2(1024 * 256, 15336, 760))
     print(OurAGB2for2(1024 * 1024, 32771, 1419))
-    print(OurAGB2for2(1024 * 1024 * 4, 67440, 2735))
+    print(OurAGB2for2(1024 * 1024 * 4, 64770, 2735))
 
     print("==================AGB2.0==================2==========larger=====================" + "\n")
 
@@ -1235,49 +1222,50 @@ def table():
 
 
 
+
 #####################      main() function   ###########################
 
 
 
 
 
-def help():
-    print(
-            "============================================input error ================================================")
-    print("input format of exact LPN: python  C:\\AGBscript.py n=1024 k=652 t=57  #(the concrete cost of AGB 2.0 to solve regular LPN over F2)")
-    print("or python C:\\AGBscript.py n=1024 k=652 t=57 q #(the concrete cost of AGB 2.0 to solve regular LPN over larger field with field size |F|>2 )")
-    print()
+# def help():
+#     print(
+#             "============================================input error ================================================")
+#     print("input format of exact LPN: python  C:\\AGBscript.py n=1024 k=652 t=57  #(the concrete cost of AGB 2.0 to solve regular LPN over F2)")
+#     print("or python C:\\AGBscript.py n=1024 k=652 t=57 q #(the concrete cost of AGB 2.0 to solve regular LPN over larger field with field size |F|>2 )")
+#     print()
 
-def main():
-    if len(sys.argv) < 3 or len(sys.argv) > 6:
-        help()
-    elif 'n' in sys.argv[1] and 'k' in sys.argv[2] and 't' in sys.argv[3]:
-        n = int(re.findall(r"\d+", sys.argv[1]).pop())
-        k = int(re.findall(r"\d+", sys.argv[2]).pop())
-        t = int(re.findall(r"\d+", sys.argv[3]).pop())
-
-        if len(sys.argv) == 4:
-            print("the concrete cost of AGB 2.0 to solve regular LPN (n=" + str(n) + ", k=" + str(k) + ", t=" + str(
-                t) + ") over F2 :")
-            print(OurAGB2for2(n, k, t))
-            print()
-
-        elif len(sys.argv) == 5 and 'q' in sys.argv[-1]:
-            print("the concrete cost of AGB 2.0 to solve regular LPN (n=" + str(n) + ", k=" + str(k) + ", t=" + str(
-                t) + ") over Fq for q>2 :")
-            print(OurAGB2forq(n, k, t))
-
-            print()
-
-        else:
-            help()
-
-    else:
-        help()
+# def main():
+#     if len(sys.argv) < 3 or len(sys.argv) > 6:
+#         help()
+#     elif 'n' in sys.argv[1] and 'k' in sys.argv[2] and 't' in sys.argv[3]:
+#         n = int(re.findall(r"\d+", sys.argv[1]).pop())
+#         k = int(re.findall(r"\d+", sys.argv[2]).pop())
+#         t = int(re.findall(r"\d+", sys.argv[3]).pop())
+#
+#         if len(sys.argv) == 4:
+#             print("the concrete cost of AGB 2.0 to solve regular LPN (n=" + str(n) + ", k=" + str(k) + ", t=" + str(
+#                 t) + ") over F2 :")
+#             print(OurAGB2for2(n, k, t))
+#             print()
+#
+#         elif len(sys.argv) == 5 and 'q' in sys.argv[-1]:
+#             print("the concrete cost of AGB 2.0 to solve regular LPN (n=" + str(n) + ", k=" + str(k) + ", t=" + str(
+#                 t) + ") over Fq for q>2 :")
+#             print(OurAGB2forq(n, k, t))
+#
+#             print()
+#
+#         else:
+#             help()
+#
+#     else:
+#         help()
 
 ##################################
 # Executed code
 ##################################
 if __name__ == '__main__':
     table()
-    main()
+    # main()
