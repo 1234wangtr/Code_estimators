@@ -24,7 +24,9 @@ def help():
     # print(
     #     "or console.py n=1024 N=4096 t=88 lambda=13 regular #(bit security of dual regular LPN with ring size 2^lambda)")
     print("or console.py n=1024 N=4096 t=88 q=13 regular #(bit security of dual regular LPN with field size q")
-    print("or console.py n=82 k=41 t=4 q=2 m=41")
+    print(" ============================================================================================")
+    print("input format of rank SD: console.py n=82 k=41 t=4 q=2 m=41")
+    # print("or console.py n=82 k=41 t=4 q=2 m=41")
     print()
 
 #####################      main() function   ###########################
