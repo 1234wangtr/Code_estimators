@@ -2,7 +2,6 @@ from lwyy.hardness_of_lpn import *
 from hybrid.hybrid_quick import *
 from esser.regular_ISD import *
 from agb2.agb2 import *
-from rank.rank_sd_estimator import *
 
 #####################      Bit security of LPN and dual LPN     ###########################
 # We propose a non-asymptotic cost of the information set decoding algorithm, Pooled Gauss attack, and statistical decoding attack
@@ -138,6 +137,3 @@ def analysisfordual2lambdaregular(n, N, t, lam):
 
     return analysisfordual2lambda(n, N, t, lam)
 
-def analysisforrank(n,k,r,q,m):
-    T1 = optimized_GRS(n,k,r,q,m)
-    return T1

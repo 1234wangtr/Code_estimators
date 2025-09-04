@@ -25,7 +25,6 @@ def help():
     #     "or console.py n=1024 N=4096 t=88 lambda=13 regular #(bit security of dual regular LPN with ring size 2^lambda)")
     print("or console.py n=1024 N=4096 t=88 q=13 regular #(bit security of dual regular LPN with field size q")
     print(" ============================================================================================")
-    print("input format of rank SD: console.py n=82 k=41 t=4 q=2 m=41")
     # print("or console.py n=82 k=41 t=4 q=2 m=41")
     print()
 
@@ -133,16 +132,6 @@ def main():
         else:
             help()
 
-    elif 'n' in sys.argv[1] and 'k' in sys.argv[2] and 't' in sys.argv[3] and 'q' in sys.argv[4] and 'm' in sys.argv[5]:
-        n = int(re.findall(r"\d+", sys.argv[1]).pop())
-        k = int(re.findall(r"\d+", sys.argv[2]).pop())
-        t = int(re.findall(r"\d+", sys.argv[3]).pop())
-        q = int(re.findall(r"\d+", sys.argv[4]).pop())
-        m = int(re.findall(r"\d+", sys.argv[5]).pop())
-        res = analysisforrank(n,k,t,q,m)
-        print("bit security of rank SD (n=" + str(n) + ", k=" + str(k) + ", t=" + str(t) + ", q=" + str(q) + ", m=" + str(m) +  "):")
-        print(res)
-        print()
 
     else:
         help()
