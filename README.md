@@ -1,4 +1,4 @@
-This is the complexities estimators for LPN, RSD and Rank SD.
+This is the complexities estimators for LPN and RSD.
 
 -\*\* LWYY22
 \*\* The estimators combining ISD, AGB (Algebraic Approach) and SD (Statistical Decoding), available at https://eprint.iacr.org/2022/712.
