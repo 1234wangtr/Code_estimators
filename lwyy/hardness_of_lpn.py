@@ -647,6 +647,7 @@ def AGBfor2(n, k, h):
     finalf = 99999
     finalmu = 999999
     for f in range(0, h):
+        # print(f"f={f} h={h}")
         for mu in range(0, math.floor(n / h)):
             if f * mu < k + 1:
                 subcost = subAGBfor2(n, k, h, f, mu)

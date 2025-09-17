@@ -75,7 +75,7 @@ def bdt_hybrid_advanced(n, k, h):
         n = beta * h
         k = n - r
 
-    print(f"n={n} k={k} h={h} n/h={n / h} beta={beta}")
+    # print(f"n={n} k={k} h={h} n/h={n / h} beta={beta}")
 
     best = 1000
     best_u, best_f = -1, -1
@@ -165,12 +165,12 @@ def bdt_hybrid_advanced(n, k, h):
     n0 = best_n0
     v0 = n0 - u0
     m0 = best_m0
-    print(f"!!!best={best} !!!\n f={best_f} u={best_u} u0={best_u0} q={best_u0 // (beta - 1)}")
-    print(f"m0={m0} n0={n0} v0={v0}")
-    print(f"pr={best_pr} G1={best_G1} G2={best_G2} G3={best_G3} try_comp={best_trycomp}")
+    # print(f"!!!best={best} !!!\n f={best_f} u={best_u} u0={best_u0} q={best_u0 // (beta - 1)}")
+    # print(f"m0={m0} n0={n0} v0={v0}")
+    # print(f"pr={best_pr} G1={best_G1} G2={best_G2} G3={best_G3} try_comp={best_trycomp}")
     # print concrete parameter
 
-    print("----------")
+    # print("----------")
     sys.stdout.flush()
 
     return best
@@ -189,7 +189,7 @@ def hybrid_bigq(n, k, h):
         n = beta * h
         k = n - r
 
-    print(f"n={n} k={k} h={h} n/h={n / h} beta={beta}")
+    # print(f"n={n} k={k} h={h} n/h={n / h} beta={beta}")
 
     best = 1000
     best_u, best_f = -1, -1
@@ -275,12 +275,12 @@ def hybrid_bigq(n, k, h):
     v0 = n0 - u0
     m0 = best_m0
     remaining = v0 + q + q * v0 + q * (q - 1) // 2
-    print(f"!!!best={best} !!!\n f={best_f} u={best_u} u0={best_u0} q={q}")
-    print(f"m0={m0} n0={n0} v0={v0} remaining={remaining}")
-    print(f"pr={best_pr} G1={best_G1} G2={best_G2} G3={best_G3} try_comp={best_trycomp}")
+    # print(f"!!!best={best} !!!\n f={best_f} u={best_u} u0={best_u0} q={q}")
+    # print(f"m0={m0} n0={n0} v0={v0} remaining={remaining}")
+    # print(f"pr={best_pr} G1={best_G1} G2={best_G2} G3={best_G3} try_comp={best_trycomp}")
     # print concrete parameter
 
-    print("----------")
+    # print("----------")
     sys.stdout.flush()
 
     return best
@@ -293,7 +293,7 @@ def hybrid_bigq_quick(n, k, h, refresh=True):
         n = beta * h
         k = n - r
 
-    print(f"n={n} k={k} h={h} n/h={n / h} beta={beta}")
+    # print(f"n={n} k={k} h={h} n/h={n / h} beta={beta}")
 
     best = float('inf')
     best_u, best_f = -1, -1
@@ -461,7 +461,7 @@ def hybrid_2_quick(n, k, h,refresh=True):
         n = beta * h
         k = n - r
 
-    print(f"n={n} k={k} h={h} n/h={n / h} beta={beta}")
+    # print(f"n={n} k={k} h={h} n/h={n / h} beta={beta}")
 
     best = float('inf')
     best_u, best_f = -1, -1

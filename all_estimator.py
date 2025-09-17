@@ -41,11 +41,13 @@ def analysisfor2(N, k, t):
 
 def analysisfor2regular(N, k, t):
     # LWYY
-    T1 = AGBfor2(N, k, t)
+    # T1 = AGBfor2(N, k, t)
+    # print(f"T1={T1}")
 
     N1 = N - t
     k1 = k - t
     T2 = analysisfor2(N1, k1, t)
+    # print(f"T2={T2}")
 
     # hybrid
     T3 = hybrid_2_quick(N,k,t)
@@ -59,9 +61,9 @@ def analysisfor2regular(N, k, t):
     T7 = OurAGB2for2(N,k,t)
 
     # dbg
-    print(f"AGB={T1} ISD={T2} HYB={T3} PER={T4} ENU={T5} REP={T6} AGB2={T7}")
+    print(f"ISD={T2} HYB={T3} PER={T4} ENU={T5} REP={T6} AGB2={T7}")
 
-    return min(T1, T2, T3, T4, T5, T6, T7)
+    return min(T2, T3, T4, T5, T6, T7)
 
 
 def analysisfordual2(n, N, t):

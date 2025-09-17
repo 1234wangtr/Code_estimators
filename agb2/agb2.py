@@ -194,68 +194,68 @@ def degree_conjfor2(n, k, h, f, mu):
     return 30
 
 
-# compute M for parameter f and mu
-def subAGBfor2(n, k, h, f, mu):
-    n = decimal.Decimal(n)
-    k = decimal.Decimal(k)
-    h = decimal.Decimal(h)
-    f = decimal.Decimal(f)
-    mu = decimal.Decimal(mu)
-    beta = decimal.Decimal(math.floor(n / h))
-
-    a1 = (beta - mu - 1) * f
-    a2 = (beta - mu - 1) ** 2 * f * (f - 1) / 2
-    a3 = (beta - mu - 1) ** 3 * f * (f - 1) * (f - 2) / 6
-    a4 = (beta - mu - 1) ** 4 * f * (f - 1) * (f - 2) * (f - 3) / 24
-
-    b1 = (beta - 1) * (h - f)
-    b2 = (beta - 1) ** 2 * (h - f) * (h - f - 1) / 2
-    b3 = (beta - 1) ** 3 * (h - f) * (h - f - 1) * (h - f - 2) / 6
-    b4 = (beta - 1) ** 4 * (h - f) * (h - f - 1) * (h - f - 2) * (h - f - 3) / 24
-
-    d = degree_conjfor2(n, k, h, f, mu)
-    d2 = a1 + b1 + a1 * b1 + a2 + b2
-    if d == 2:
-        M = d2
-
-    elif d == 3:
-        d3 = b3 + a1 * b2 + a2 * b1 + a3
-        M = d2 + d3
-
-    elif d == 4:
-        d3 = b3 + a1 * b2 + a2 * b1 + a3
-        d4 = b4 + a1 * b3 + a2 * b2 + a3 * b1 + a4
-        M = d2 + d3 + d4
-
-    else:
-        return decimal.Decimal(2) ** 300
-
-    return 2 * M.log10() / log10Two + (3 * (k + 1 - f * mu)).log10() / log10Two - f * (
-            1 - mu / beta).log10() / log10Two
-
-
-# The cost of AGB over F_2
-def AGBfor2(n, k, h):
-    n = decimal.Decimal(n)
-    k = decimal.Decimal(k)
-    finalcost = 999999
-    finalf = 99999
-    finalmu = 999999
-    for f in range(0, h + 1):
-        for mu in range(0, math.floor(n / h) + 1):
-            if f * mu < k + 1:
-                subcost = subAGBfor2(n, k, h, f, mu)
-                if finalcost > subcost:
-                    finalcost = subcost
-                    finalf = f
-                    finalmu = mu
-
-    # print(degree_conjfor2(n, k, h, finalf, finalmu))
-    # print(finalf)
-    # print(finalmu)
-    # print("   for F2  n = " + str(n) + "     k = " + str(k) + "    h = " + str(h) + "  cost  " + str(round(finalcost, 8)))
-
-    return round(finalcost, 2)
+# # compute M for parameter f and mu
+# def subAGBfor2(n, k, h, f, mu):
+#     n = decimal.Decimal(n)
+#     k = decimal.Decimal(k)
+#     h = decimal.Decimal(h)
+#     f = decimal.Decimal(f)
+#     mu = decimal.Decimal(mu)
+#     beta = decimal.Decimal(math.floor(n / h))
+#
+#     a1 = (beta - mu - 1) * f
+#     a2 = (beta - mu - 1) ** 2 * f * (f - 1) / 2
+#     a3 = (beta - mu - 1) ** 3 * f * (f - 1) * (f - 2) / 6
+#     a4 = (beta - mu - 1) ** 4 * f * (f - 1) * (f - 2) * (f - 3) / 24
+#
+#     b1 = (beta - 1) * (h - f)
+#     b2 = (beta - 1) ** 2 * (h - f) * (h - f - 1) / 2
+#     b3 = (beta - 1) ** 3 * (h - f) * (h - f - 1) * (h - f - 2) / 6
+#     b4 = (beta - 1) ** 4 * (h - f) * (h - f - 1) * (h - f - 2) * (h - f - 3) / 24
+#
+#     d = degree_conjfor2(n, k, h, f, mu)
+#     d2 = a1 + b1 + a1 * b1 + a2 + b2
+#     if d == 2:
+#         M = d2
+#
+#     elif d == 3:
+#         d3 = b3 + a1 * b2 + a2 * b1 + a3
+#         M = d2 + d3
+#
+#     elif d == 4:
+#         d3 = b3 + a1 * b2 + a2 * b1 + a3
+#         d4 = b4 + a1 * b3 + a2 * b2 + a3 * b1 + a4
+#         M = d2 + d3 + d4
+#
+#     else:
+#         return decimal.Decimal(2) ** 300
+#
+#     return 2 * M.log10() / log10Two + (3 * (k + 1 - f * mu)).log10() / log10Two - f * (
+#             1 - mu / beta).log10() / log10Two
+#
+#
+# # The cost of AGB over F_2
+# def AGBfor2(n, k, h):
+#     n = decimal.Decimal(n)
+#     k = decimal.Decimal(k)
+#     finalcost = 999999
+#     finalf = 99999
+#     finalmu = 999999
+#     for f in range(0, h + 1):
+#         for mu in range(0, math.floor(n / h)):
+#             if f * mu < k + 1:
+#                 subcost = subAGBfor2(n, k, h, f, mu)
+#                 if finalcost > subcost:
+#                     finalcost = subcost
+#                     finalf = f
+#                     finalmu = mu
+#
+#     # print(degree_conjfor2(n, k, h, finalf, finalmu))
+#     # print(finalf)
+#     # print(finalmu)
+#     # print("   for F2  n = " + str(n) + "     k = " + str(k) + "    h = " + str(h) + "  cost  " + str(round(finalcost, 8)))
+#
+#     return round(finalcost, 2)
 
 
 ######################################################################### AGB 2.0 r2 & r3 #################################################
