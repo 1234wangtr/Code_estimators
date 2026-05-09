@@ -298,58 +298,9 @@ def hybrid_bigq_quick(n, k, h, refresh=True):
     best = float('inf')
     best_u, best_f = -1, -1
 
-    # initial search range over u (integer)
-    lo, hi = 0, beta - 1-1
-    # evaluate endpoints
-    f_lo = sub_bigq_quick_u(n, k, h, lo)
-    f_hi = sub_bigq_quick_u(n, k, h, hi)
-    evals = {lo: f_lo, hi: f_hi}
-
-    # narrowing loop
-    while hi - lo > 30:
-        # split into 4 segments by 3 interior points
-        d = (hi - lo) // 4
-        m1 = lo + d
-        m2 = lo + 2*d
-        m3 = lo + 3*d
-
-        for m in (m1, m2, m3):
-            if m not in evals:
-                evals[m] = sub_bigq_quick_u(n, k, h, m)
-
-        #print(f"lo={lo}, m1={m1} f1={evals[m1]}, m2={m2} f2={evals[m2]}, m3={m3} f3={evals[m3]}, hi={hi}")
-
-        # collect points and values
-        us = [lo, m1, m2, m3, hi]
-        fs = [evals[u] for u in us]
-        # find index of minimal f
-        idx = min(range(len(fs)), key=lambda i: fs[i])
-
-        # shrink interval to neighbors of minimal index
-        if idx == 0:
-            # minimum at lo -> keep [lo, m1]
-            hi = m1
-            f_hi = evals[m1]
-            evals[hi] = f_hi
-        elif idx == len(us)-1:
-            # at hi -> keep [m3, hi]
-            lo = m3
-            f_lo = evals[m3]
-            evals[lo] = f_lo
-        else:
-            # at some mid -> keep [us[idx-1], us[idx+1]]
-            lo = us[idx-1]
-            hi = us[idx+1]
-            f_lo = evals[lo]
-            f_hi = evals[hi]
-            evals[lo] = f_lo
-            evals[hi] = f_hi
-
-    # brute-force small window
-    start = max(lo - 10, 0)
-    end = min(hi + 10, beta - 1)
-    for u in range(start, min(end + 1,beta-1-1)):
-        val = evals.get(u, sub_bigq_quick_u(n, k, h, u))
+ 
+    for u in range(0, min(k//h+1 + 1,beta-1-1)):
+        val = sub_bigq_quick_u(n, k, h, u)
         if val < best:
             best = val
             best_u = u
@@ -466,58 +417,9 @@ def hybrid_2_quick(n, k, h,refresh=True):
     best = float('inf')
     best_u, best_f = -1, -1
 
-    # initial search range over u (integer)
-    lo, hi = 0, beta - 1-1
-    # evaluate endpoints
-    f_lo = sub_2_quick_u(n, k, h, lo)
-    f_hi = sub_2_quick_u(n, k, h, hi)
-    evals = {lo: f_lo, hi: f_hi}
 
-    # narrowing loop
-    while hi - lo > 30:
-        # split into 4 segments by 3 interior points
-        d = (hi - lo) // 4
-        m1 = lo + d
-        m2 = lo + 2*d
-        m3 = lo + 3*d
-
-        for m in (m1, m2, m3):
-            if m not in evals:
-                evals[m] = sub_2_quick_u(n, k, h, m)
-
-        # print(f"lo={lo}, m1={m1} f1={evals[m1]}, m2={m2} f2={evals[m2]}, m3={m3} f3={evals[m3]}, hi={hi}")
-
-        # collect points and values
-        us = [lo, m1, m2, m3, hi]
-        fs = [evals[u] for u in us]
-        # find index of minimal f
-        idx = min(range(len(fs)), key=lambda i: fs[i])
-
-        # shrink interval to neighbors of minimal index
-        if idx == 0:
-            # minimum at lo -> keep [lo, m1]
-            hi = m1
-            f_hi = evals[m1]
-            evals[hi] = f_hi
-        elif idx == len(us)-1:
-            # at hi -> keep [m3, hi]
-            lo = m3
-            f_lo = evals[m3]
-            evals[lo] = f_lo
-        else:
-            # at some mid -> keep [us[idx-1], us[idx+1]]
-            lo = us[idx-1]
-            hi = us[idx+1]
-            f_lo = evals[lo]
-            f_hi = evals[hi]
-            evals[lo] = f_lo
-            evals[hi] = f_hi
-
-    # brute-force small window
-    start = max(lo - 10, 0)
-    end = min(hi + 10, beta - 1)
-    for u in range(start, min(end + 1,beta-1-1)):
-        val = evals.get(u, sub_2_quick_u(n, k, h, u))
+    for u in range(0, min(k//h+1 + 1,beta-1-1)):
+        val = sub_2_quick_u(n, k, h, u)
         if val < best:
             best = val
             best_u = u
@@ -640,4 +542,3 @@ if __name__ == '__main__':
     #
     # bdt_hybrid_advanced(609728, 36288, 1269)
     # bdt_hybrid_advanced(10805248, 589760, 1319)
-
