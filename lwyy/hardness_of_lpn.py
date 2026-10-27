@@ -1,3 +1,4 @@
+import functools
 import math
 import numpy as np
 import decimal
@@ -22,13 +23,36 @@ def com(n, m):
     return result
 
 
+# log2com: log2 of com(n, m): the exact binomial (math.comb), only the logarithm is taken in floating point.
+# Cached, since the parameter searches evaluate the same binomials many times.
+@functools.lru_cache(maxsize=1 << 16)
+def log2com(n, m):
+    # com() returns 1 when m < 0 or m > n (the binomial is 0 there); kept so that results match com()
+    if m < 0 or m > n:
+        return 0.0
+
+    return math.log2(math.comb(n, m))
+
+
+# log2sum: log2(2^x1 + 2^x2 + ...), to add costs given as log2 values without overflowing a float
+def log2sum(*xs):
+    mx = max(xs)
+    if mx == math.inf:
+        return math.inf
+
+    return mx + math.log2(sum(2.0 ** (x - mx) for x in xs))
+
+
+# log2Tgauss: log2 of the Gaussian elimination cost (N - k - l) * N / log2(N - k - l) of one ISD iteration
+def log2Tgauss(N, k, l):
+    return math.log2((N - k - l) * N) - math.log2(np.log2(N - k - l))
+
+
 # Gauss: Calculator for the cost of Pooled Gauss
 def Gauss(N, k, t):
-    decimal.getcontext().prec = 170
-    log10Two = decimal.Decimal(2).log10()
 
     # 2^pp = the probability of guessing successfully in one iteration
-    pp = com(N - k, t).log10() / log10Two - (com(N, t).log10() / log10Two)
+    pp = log2com(N - k, t) - log2com(N, t)
 
     # T = the cost of inverting a matrix via Strassenâ€™s algorithm
     if N - k > k:
@@ -45,15 +69,12 @@ def Gauss(N, k, t):
 
 # sub_SD_ISD: Calculator for the cost of SD-ISD given additional parameters p and l
 def sub_SD_ISD(N, k, t, l, p):
-    decimal.getcontext().prec = 170
-    log10Two = decimal.Decimal(2).log10()
 
     # make p and l reasonable: both p and k+l are positive even number
     l = int((k + l) / 2) * 2 - k + 2
     p = int(p / 2) * 2
 
-    L0 = com(int((k + l) / 2), int(p / 2))
-    logL0 = L0.log10() / log10Two
+    logL0 = log2com(int((k + l) / 2), int(p / 2))
     logS = logL0 * 2 - l
 
     # quickly break, since the cost should be larger than logL0 and logS
@@ -62,25 +83,21 @@ def sub_SD_ISD(N, k, t, l, p):
     if logS > 999:
         return 999
 
-    S = decimal.Decimal(2) ** logS
-
     if N - k - l < 1:
         return 23333
 
-    # T1: the cost of one iteration
-    Tgauss = decimal.Decimal((N - k - l) * N) / decimal.Decimal(np.log2(N - k - l))
-    T1 = Tgauss + 2 * L0 + 2 * S
-    T1 = T1 * decimal.Decimal(N)
+    # T1: the cost of one iteration (log2)
+    logT1 = log2sum(log2Tgauss(N, k, l), 1 + logL0, 1 + logS) + math.log2(N)
 
     # 2^pp = the probability of guessing successfully in one iteration
-    pp = com(N - k - l, t - p).log10() / log10Two - (com(N, t).log10() / log10Two)
+    pp = log2com(N - k - l, t - p) - log2com(N, t)
     pp = pp + l + logS
 
     # quickly break, since the probability should be smaller than 1
     if pp >= 0:
         return 999
 
-    return float(T1.log10() / log10Two - pp)
+    return float(logT1 - pp)
 
 
 # min_SD_ISD: Calculator for the cost of SD-ISD given additional parameters p based on ternary search
@@ -138,8 +155,6 @@ def SD_ISD(N, k, t):
 
 # sub_BJMM_ISD: Calculator for the cost of BJMM_ISD given additional parameters p2, l, e1, e2, r1 and r2
 def sub_BJMM_ISD(N, k, t, p2, l, e1, e2, r1, r2, localmin):
-    decimal.getcontext().prec = 170
-    log10Two = decimal.Decimal(2).log10()
 
     # make p2 and l reasonable: both p2 and k+l are positive even number
     l = int((k + l) / 2) * 2 - k + 2
@@ -147,33 +162,26 @@ def sub_BJMM_ISD(N, k, t, p2, l, e1, e2, r1, r2, localmin):
     p1 = 2 * (p2 - e2)
     p = 2 * (p1 - e1)
 
-    S3 = com(int((k + l) / 2), int(p2 / 2))
-    logS3 = S3.log10() / log10Two
+    logS3 = log2com(int((k + l) / 2), int(p2 / 2))
 
     logC3 = logS3 * 2 - r2
-    C3 = decimal.Decimal(2) ** logC3
 
-    S2 = C3
     logC2 = 2 * logC3 - r1
 
-    C2 = decimal.Decimal(2) ** logC2
-
-    logmu2 = com(p2, e2).log10() / log10Two + (com(k + l - p2, p2 - e2).log10() / log10Two)
-    logmu2 = logmu2 - com(k + l, p2).log10() / log10Two
+    logmu2 = log2com(p2, e2) + log2com(k + l - p2, p2 - e2)
+    logmu2 = logmu2 - log2com(k + l, p2)
     logS11 = logmu2 + logC2
-    logS12 = com(k + l, p1).log10() / log10Two - (r1 + r2)
+    logS12 = log2com(k + l, p1) - (r1 + r2)
     logS1 = logS11
     if logS11 > logS12:
         logS1 = logS12
-    S1 = decimal.Decimal(2) ** logS1
 
     logC1 = logS1 * 2 - l + r1 + r2
-    C1 = decimal.Decimal(2) ** logC1
 
-    logmu1 = com(p1, e1).log10() / log10Two + (com(k + l - p1, p1 - e1).log10() / log10Two)
-    logmu1 = logmu1 - com(k + l, p1).log10() / log10Two
+    logmu1 = log2com(p1, e1) + log2com(k + l - p1, p1 - e1)
+    logmu1 = logmu1 - log2com(k + l, p1)
     logS01 = logmu1 + logC1
-    logS02 = com(k + l, p).log10() / log10Two - l
+    logS02 = log2com(k + l, p) - l
     logS0 = logS01
     if logS01 > logS02:
         logS0 = logS02
@@ -186,15 +194,12 @@ def sub_BJMM_ISD(N, k, t, p2, l, e1, e2, r1, r2, localmin):
     if logC2 > localmin:
         return 999
 
-    # T1: the cost of one iteration
-    Tgauss = decimal.Decimal((N - k - l) * N) / decimal.Decimal(np.log2(N - k - l))
-    T1 = Tgauss + 8 * S3 + 4 * C3 + 2 * C2 + 2 * C1
-    T1 = T1 * decimal.Decimal(N)
-    logT1 = T1.log10() / log10Two
+    # T1: the cost of one iteration (log2)
+    logT1 = log2sum(log2Tgauss(N, k, l), 3 + logS3, 2 + logC3, 1 + logC2, 1 + logC1) + math.log2(N)
 
     # 2^pp = the probability of guessing successfully in one iteration
-    pp = com(N - k - l, t - p).log10() / log10Two + l + logS0
-    pp = pp - (com(N, t).log10() / log10Two)
+    pp = log2com(N - k - l, t - p) + l + logS0
+    pp = pp - log2com(N, t)
 
     # quickly break, since the probability should be smaller than 1
     if pp >= 0:
@@ -206,8 +211,6 @@ def sub_BJMM_ISD(N, k, t, p2, l, e1, e2, r1, r2, localmin):
 # min_sub_BJMM_ISD: Calculator for the cost of BJMM_ISD given additional parameters p2, l
 # Note that the the optimal parameter estimation relies on Hamdaoui and Sendrier "A non asymptotic analysis of information set decoding"
 def min_sub_BJMM_ISD(N, k, t, p2, l):
-    decimal.getcontext().prec = 170
-    log10Two = decimal.Decimal(2).log10()
 
     # We focus on the LPN problem whose bit security is smaller than 999
     localmin = 999
@@ -222,10 +225,10 @@ def min_sub_BJMM_ISD(N, k, t, p2, l):
         for e1 in range(start_e1, p1):
             p = 2 * (p1 - e1)
 
-            term1 = com(int((k + l) / 2), int(p2 / 2)).log10() / log10Two
-            term2 = com(k + l, p1).log10() / log10Two
-            logmu2 = com(p2, e2).log10() / log10Two + (com(k + l - p2, p2 - e2).log10() / log10Two)
-            logmu2 = logmu2 - (com(k + l, p2).log10() / log10Two)
+            term1 = log2com(int((k + l) / 2), int(p2 / 2))
+            term2 = log2com(k + l, p1)
+            logmu2 = log2com(p2, e2) + log2com(k + l - p2, p2 - e2)
+            logmu2 = logmu2 - log2com(k + l, p2)
             logmu2 = logmu2 + 4 * term1 - term2
             optimal_r2 = int(logmu2)
 
@@ -234,8 +237,8 @@ def min_sub_BJMM_ISD(N, k, t, p2, l):
             if optimal_r2 >= l:
                 optimal_r2 = l - 1
 
-            term3 = com(p1, e1).log10() / log10Two + (com(k + l - p1, p1 - e1).log10() / log10Two)
-            term4 = term3 + (com(k + l, p1).log10() / log10Two) - (com(k + l, p).log10() / log10Two)
+            term3 = log2com(p1, e1) + log2com(k + l - p1, p1 - e1)
+            term4 = term3 + log2com(k + l, p1) - log2com(k + l, p)
             optimal_r1 = int(term4) - optimal_r2
 
             if optimal_r1 < 0:
@@ -308,19 +311,14 @@ def BJMM_ISD(N, k, t):
 
 # sub_SD_ISDq: Calculator for the cost of SD-ISD over F_q given additional parameters p and l
 def sub_SD_ISDq(N, k, t, q, l, p):
-    decimal.getcontext().prec = 170
-    log10Two = decimal.Decimal(2).log10()
 
     # make p and l reasonable: both p and k+l are positive even number
     l = int((k + l) / 2) * 2 - k + 2
     p = int(p / 2) * 2
 
-    L0 = com(int((k + l) / 2), int(p / 2)) * decimal.Decimal(pow(q - 1, int(p / 2)))
-    logL0 = com(int((k + l) / 2), int(p / 2)).log10() / log10Two + decimal.Decimal(int(p / 2)) * (
-            decimal.Decimal(q - 1).log10() / log10Two)
+    logL0 = log2com(int((k + l) / 2), int(p / 2)) + int(p / 2) * math.log2(q - 1)
 
-    logS = 2 * logL0 - decimal.Decimal(l) * (decimal.Decimal(q).log10() / log10Two)
-    S = decimal.Decimal(2) ** logS
+    logS = 2 * logL0 - l * math.log2(q)
 
     # We focus on the LPN problem whose bit security is smaller than 999
     # quickly break, since the cost should be larger than logL0 and logS
@@ -329,17 +327,14 @@ def sub_SD_ISDq(N, k, t, q, l, p):
     if logL0 > 999:
         return 999
 
-    # T1: the cost of one iteration
-    Tgauss = decimal.Decimal((N - k - l) * N) / decimal.Decimal(np.log2(N - k - l))
-    T1 = Tgauss + 2 * L0 + 2 * S
-    T1 = T1 * decimal.Decimal(N)
-    logT1 = T1.log10() / log10Two
+    # T1: the cost of one iteration (log2)
+    logT1 = log2sum(log2Tgauss(N, k, l), 1 + logL0, 1 + logS) + math.log2(N)
 
     # 2^pp = the probability of guessing successfully in one iteration
 
-    pp = com(N - k - l, t - p).log10() / log10Two - (com(N, t).log10() / log10Two)
-    pp = pp + decimal.Decimal(l) * (decimal.Decimal(q).log10() / log10Two)
-    pp = pp - decimal.Decimal(p) * (decimal.Decimal(q - 1).log10() / log10Two)
+    pp = log2com(N - k - l, t - p) - log2com(N, t)
+    pp = pp + l * math.log2(q)
+    pp = pp - p * math.log2(q - 1)
     pp = pp + logS
 
     # quickly break, since the probability should be smaller than 1
@@ -423,11 +418,8 @@ def BJMM_ISD_lam(N, k, t, lam):
 
 # The cost of statistical decoding attack over F_2
 def SDfor2(N, k, t):
-    decimal.getcontext().prec = 170
-    log10Two = decimal.Decimal(2).log10()
 
-    pp = decimal.Decimal(N - t + 1) / decimal.Decimal(N - k - t)
-    pp = pp.log10() / log10Two
+    pp = math.log2((N - t + 1) / (N - k - t))
     pp = pp * 2 * t
 
     return np.log2(k + 1) + float(pp)
@@ -435,10 +427,8 @@ def SDfor2(N, k, t):
 
 # The cost of statistical decoding attack over a larger field
 def SDforq(N, k, t):
-    decimal.getcontext().prec = 170
-    log10Two = decimal.Decimal(2).log10()
 
-    pp = com(N, t).log10() / log10Two - (com(N - k - 1, t).log10() / log10Two)
+    pp = log2com(N, t) - log2com(N - k - 1, t)
 
     return np.log2(k + 1) + float(2 * pp)
 
